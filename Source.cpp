@@ -248,7 +248,7 @@ int main()
     // Print the final total bill with order details
     cout << "\n**********************************\n";
     cout << "Order Summary:\n" << orderSummary;
-    cout << "Total Bill: Rs. " << total << "\n";
+    cout << "Total Bill:" << total << "\n";
     cout << "*** Thank you for dining at KFC ***\n";
 
     return 0;
