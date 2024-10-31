@@ -230,7 +230,7 @@ int main()
         total += orderTotal;
 
         // Store order details in the summary string
-        orderSummary += to_string(quantity) + " x " + itemName + " @ Rs. "
+        orderSummary += to_string(quantity) + " x " + itemName + " Rs. "
             + to_string(static_cast<int>(itemPrice)) + " each = Rs. "
             + to_string(static_cast<int>(orderTotal)) + "\n";
     }
