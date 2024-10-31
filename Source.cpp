@@ -239,7 +239,8 @@ int main()
     cout << "\nWould you like delivery (Rs. 50 extra)? (y/n): ";
     cin >> deliveryOption;
 
-    if (deliveryOption == 'y' || deliveryOption == 'Y') {
+    if (deliveryOption == 'y' || deliveryOption == 'Y') 
+{
         total += deliveryFee;
         orderSummary += "Delivery Fee = Rs. 50\n";
     }
