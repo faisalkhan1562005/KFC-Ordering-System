@@ -8,7 +8,7 @@ int main()
     int choice, quantity, categoryChoice;
     float total = 0;
     string orderSummary = ""; 
-    const float deliveryFee = 50.0;
+    float deliveryFee = 50.0;
     char deliveryOption;
 
     
