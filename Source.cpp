@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iomanip>
 #include <string>
 using namespace std;
 
@@ -11,7 +10,6 @@ int main()
     float deliveryFee = 50.0;
     char deliveryOption;
 
-    
     cout << "*** Welcome to KFC ****\n";
     cout << "***********************\n";
 
@@ -28,6 +26,15 @@ int main()
         cout << "Enter your choice (1-5): ";
         cin >> categoryChoice;
 
+        // Input validation for category choice
+        if (cin.fail()) 
+        {
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            cout << "Invalid input. Please enter a number between 1 and 5.\n";
+            continue;
+        }
+
         if (categoryChoice == 5) 
         { 
             break;
@@ -41,7 +48,7 @@ int main()
             cout << "1. Zinger Burger - Rs. 350\n";
             cout << "2. Double Zinger - Rs. 500\n";
             cout << "3. Crispy Burger - Rs. 400\n";
-            cout << "4 Chicken Burger - Rs. 450\n";
+            cout << "4. Chicken Burger - Rs. 450\n";
             cout << "5. Cheese Burger - Rs. 380\n";
             break;
 
@@ -81,8 +88,24 @@ int main()
         cout << "\nEnter the item number from the menu: ";
         cin >> choice;
 
+        if (cin.fail()) 
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter a valid item number.\n";
+            continue;
+        }
+
         cout << "Enter quantity: ";
         cin >> quantity;
+
+        if (cin.fail() || quantity <= 0) 
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Please enter a valid quantity.\n";
+            continue;
+        }
 
         // Variable to store item price and name
         string itemName;
@@ -95,27 +118,22 @@ int main()
             { 
                 itemName = "Zinger Burger"; itemPrice = 350; 
             }
-
             else if(choice == 2)
             {
                 itemName = "Double Zinger"; itemPrice = 500; 
             }
-
             else if (choice == 3) 
             { 
                 itemName = "Crispy Burger"; itemPrice = 400;
             }
-
             else if (choice == 4) 
             {
                 itemName = "Grilled Chicken Burger"; itemPrice = 450;
             }
-
             else if (choice == 5) 
             {
                 itemName = "Cheese Burger"; itemPrice = 380;
             }
-
             else 
             {
                 cout << "Invalid burger choice.\n"; 
@@ -128,27 +146,22 @@ int main()
             { 
                 itemName = "Chicken Wings (6 pcs)"; itemPrice = 250;
             }
-
             else if (choice == 2)
             {
                 itemName = "Chicken Nuggets (8 pcs)"; itemPrice = 300;
             }
-
             else if (choice == 3)
             {
                 itemName = "Fries (Regular)"; itemPrice = 150;
             }
-
             else if (choice == 4)
             { 
                 itemName = "Fries (Large)"; itemPrice = 250;
             }
-
             else if (choice == 5)
             {
                 itemName = "Popcorn Chicken"; itemPrice = 200;
             }
-
             else
             {
                 cout << "Invalid snack choice.\n";
@@ -162,28 +175,23 @@ int main()
             { 
                 itemName = "Soft Drink"; itemPrice = 100;
             }
-
             else if (choice == 2)
             { 
                 itemName = "Juice"; itemPrice = 120; 
             }
-
             else if (choice == 3) 
             {
                 itemName = "Water Bottle"; itemPrice = 80;
             }
-
             else if
                 (choice == 4) 
             {
                 itemName = "Cold Coffee"; itemPrice = 180;
             }
-
             else if (choice == 5) 
             { 
                 itemName = "Milkshake"; itemPrice = 250;
             }
-
             else
             {
                 cout << "Invalid drink choice.\n"; 
@@ -197,27 +205,22 @@ int main()
             {
                 itemName = "Zinger Combo"; itemPrice = 600;
             }
-
             else if (choice == 2)
             {
                 itemName = "Crispy Combo"; itemPrice = 750;
             }
-
             else if (choice == 3)
             {
                 itemName = "Family Combo"; itemPrice = 1500;
             }
-
             else if (choice == 4) 
             {
                 itemName = "Snack Combo"; itemPrice = 500;
             }
-
             else if (choice == 5)
             {
                 itemName = "Kid's Combo"; itemPrice = 450;
             }
-
             else 
             { 
                 cout << "Invalid combo choice.\n"; 
@@ -240,7 +243,7 @@ int main()
     cin >> deliveryOption;
 
     if (deliveryOption == 'y' || deliveryOption == 'Y') 
-{
+    {
         total += deliveryFee;
         orderSummary += "Delivery Fee = Rs. 50\n";
     }
@@ -248,7 +251,7 @@ int main()
     // Print the final total bill with order details
     cout << "\n**********************************\n";
     cout << "Order Summary:\n" << orderSummary;
-    cout << "Total Bill:" << total << "\n";
+    cout << "Total Bill: Rs. " << total << "\n";
     cout << "*** Thank you for dining at KFC ***\n";
 
     return 0;
