@@ -2,257 +2,365 @@
 #include <string>
 using namespace std;
 
-int main() 
+struct Book
 {
-    int choice, quantity, categoryChoice;
-    float total = 0;
-    string orderSummary = ""; 
-    float deliveryFee = 50.0;
-    char deliveryOption;
+    string title;
+    string author;
+    bool isBorrowed;
+};
 
-    cout << "*** Welcome to KFC ****\n";
-    cout << "***********************\n";
+const int maxBooks = 100;  // Maximum capacity of the library
+Book books[maxBooks];
+int bookCount = 0;
 
-    while (true) 
+
+// Function Declarations
+void addBook();
+void deleteBook();
+void searchBook();
+void viewBooks();
+void borrowBook();
+void returnBook();
+void checkAvailability();
+void getBookCount();
+void getBorrowedCount();
+void getAvailableBooksCount();
+void clearLibrary();
+void viewBooksByAuthor();
+void updateBookDetails();
+void viewBorrowedBooks();
+void menu();
+
+int main()
+{
+
+    cout << "\033[31m"
+        << "  _     _ _                            __  __                                                   _   \n"
+        << " | |   (_| |__  _ __ __ _ _ __ _   _  |  \\/  | __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_ \n"
+        << " | |   | | '_ \\| '__/ _` | '__| | | | | |\\/| |/ _` | '_ \\ / _` |/ _` |/ _ | '_ ` _ \\ / _ | '_ \\| __|\n"
+        << " | |___| | |_) | | | (_| | |  | |_| | | |  | | (_| | | | | (_| | (_| |  __| | | | | |  __| | | | |_ \n"
+        << " |_____|_|_.__/|_|  \\__,_|_|   \\__, | |_|  |_|\\__,_|_| |_|\\__,_|\\__, |\\___|_| |_| |_|\\___|_| |_|\\__|\n"
+        << "                               |___/                            |___/                               \n"
+        << "\033[0m";
+    menu();
+    return 0;
+}
+
+// Function Definitions
+
+void addBook()
+{
+    if (bookCount >= maxBooks)
     {
-        // Display categories
-        cout << "\nChoose a category:\n";
-        cout << "1. Burgers\n";
-        cout << "2. Snacks\n";
-        cout << "3. Drinks\n";
-        cout << "4. Combos\n";
-        cout << "5. Exit\n";
+        cout << "Library is full, cannot add more books.\n";
+        return;
+    }
+    Book newBook;
+    cin.ignore(); // Clear input buffer
+    cout << "Enter book title: ";
+    getline(cin, newBook.title);
+    cout << "Enter author name: ";
+    getline(cin, newBook.author);
+    newBook.isBorrowed = false;  // Default: book is available
+    books[bookCount++] = newBook;
+    cout << "Book added successfully!\n";
+}
 
-        cout << "Enter your choice (1-5): ";
-        cin >> categoryChoice;
-
-        // Input validation for category choice
-        if (cin.fail()) 
+void deleteBook()
+{
+    string title;
+    cin.ignore();
+    cout << "Enter the title of the book to delete: ";
+    getline(cin, title);
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].title == title)
         {
-            cin.clear(); // Clear the error flag
+            for (int j = i; j < bookCount - 1; j++)
+            {
+                books[j] = books[j + 1];  // Shift books left
+            }
+            bookCount--;
+            cout << "Book deleted successfully!\n";
+            return;
+        }
+    }
+    cout << "Book not found.\n";
+}
+
+void searchBook()
+{
+    string title;
+    cin.ignore();
+    cout << "Enter the title of the book to search: ";
+    getline(cin, title);
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].title == title)
+        {
+            cout << "Book found: " << books[i].title << " by " << books[i].author << "\n";
+            return;
+        }
+    }
+    cout << "Book not found.\n";
+}
+
+void viewBooks()
+{
+    if (bookCount == 0)
+    {
+        cout << "No books available.\n";
+        return;
+    }
+    for (int i = 0; i < bookCount; i++)
+    {
+        cout << "Title: " << books[i].title << ", Author: " << books[i].author;
+        cout << (books[i].isBorrowed ? " (Borrowed)" : " (Available)") << "\n";
+    }
+}
+
+void borrowBook()
+{
+    string title;
+    cin.ignore();
+    cout << "Enter book title to borrow: ";
+    getline(cin, title);
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].title == title)
+        {
+            if (!books[i].isBorrowed)
+            {
+                books[i].isBorrowed = true;
+                cout << "Book borrowed successfully!\n";
+            }
+            else
+            {
+                cout << "Book is already borrowed.\n";
+            }
+            return;
+        }
+    }
+    cout << "Book not found.\n";
+}
+
+void returnBook()
+{
+    string title;
+    cin.ignore();
+    cout << "Enter book title to return: ";
+    getline(cin, title);
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].title == title)
+        {
+            if (books[i].isBorrowed)
+            {
+                books[i].isBorrowed = false;
+                cout << "Book returned successfully!\n";
+            }
+            else
+            {
+                cout << "This book is not borrowed.\n";
+            }
+            return;
+        }
+    }
+    cout << "Book not found.\n";
+}
+
+void checkAvailability()
+{
+    string title;
+    cin.ignore();
+    cout << "Enter book title to check availability: ";
+    getline(cin, title);
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].title == title)
+        {
+            cout << (books[i].isBorrowed ? "Book is borrowed." : "Book is available.") << "\n";
+            return;
+        }
+    }
+    cout << "Book not found.\n";
+}
+
+void getBookCount()
+{
+    cout << "Total books: " << bookCount << "\n";
+}
+
+void getBorrowedCount()
+{
+    int count = 0;
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].isBorrowed) count++;
+    }
+    cout << "Total borrowed books: " << count << "\n";
+}
+
+void getAvailableBooksCount()
+{
+    int count = 0;
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (!books[i].isBorrowed) count++;
+    }
+    cout << "Total available books: " << count << "\n";
+}
+
+void clearLibrary()
+{
+    bookCount = 0;  // Reset the library
+    cout << "Library cleared.\n";
+}
+
+void viewBooksByAuthor()
+{
+    string author;
+    cin.ignore();
+    cout << "Enter author name: ";
+    getline(cin, author);
+    bool found = false;
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].author == author)
+        {
+            cout << "Title: " << books[i].title << "\n";
+            found = true;
+        }
+    }
+    if (!found) {
+        cout << "No books found by this author.\n";
+    }
+}
+
+void updateBookDetails()
+{
+    string title;
+    cin.ignore();
+    cout << "Enter the title of the book to update: ";
+    getline(cin, title);
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].title == title)
+        {
+            cout << "Enter new author name: ";
+            getline(cin, books[i].author);
+            cout << "Book details updated.\n";
+            return;
+        }
+    }
+    cout << "Book not found.\n";
+}
+
+void viewBorrowedBooks()
+{
+    bool found = false;
+    for (int i = 0; i < bookCount; i++)
+    {
+        if (books[i].isBorrowed)
+        {
+            cout << "Title: " << books[i].title << " by " << books[i].author << "\n";
+            found = true;
+        }
+    }
+    if (!found)
+    {
+        cout << "No borrowed books.\n";
+    }
+}
+
+void menu()
+{
+    int choice;
+    do {
+
+
+
+       
+
+        // Menu Design
+        cout << "\033[34m" << "\n=======================================\n" << "\033[0m";
+        cout << "\033[32m" << "       Library Management System       \n" << "\033[0m";
+        cout << "\033[34m" << "=======================================\n" << "\033[0m";
+        cout << "  1. Add Book                          \n";
+        cout << "  2. Delete Book                       \n";
+        cout << "  3. Search Book                       \n";
+        cout << "  4. View All Books                    \n";
+        cout << "  5. Borrow Book                       \n";
+        cout << "  6. Return Book                       \n";
+        cout << "  7. Check Availability                \n";
+        cout << "  8. Get Total Book Count              \n";
+        cout << "  9. Get Borrowed Book Count           \n";
+        cout << " 10. Get Available Book Count          \n";
+        cout << " 11. Clear Library                     \n";
+        cout << " 12. View Books by Author              \n";
+        cout << " 13. Update Book Details               \n";
+        cout << " 14. View Borrowed Books               \n";
+        cout << " 15. Exit                              \n";
+        cout << "\033[34m" << "=======================================\n" << "\033[0m";
+        cout << "\033[33m" << "Enter your choice: " << "\033[0m";
+
+
+        if (!(cin >> choice)) {
+            cin.clear(); // Clear invalid input flag
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            cout << "Invalid input. Please enter a number between 1 and 5.\n";
+            cout << "Wrong input, please enter a valid number.\n";
             continue;
         }
 
-        if (categoryChoice == 5) 
-        { 
-            break;
-        }
-
-        // Display the selected category menu
-        switch (categoryChoice)
+        switch (choice)
         {
         case 1:
-            cout << "\nBurgers Menu:\n";
-            cout << "1. Zinger Burger - Rs. 350\n";
-            cout << "2. Double Zinger - Rs. 500\n";
-            cout << "3. Crispy Burger - Rs. 400\n";
-            cout << "4. Chicken Burger - Rs. 450\n";
-            cout << "5. Cheese Burger - Rs. 380\n";
+            addBook();
             break;
-
         case 2:
-            cout << "\nSnacks Menu:\n";
-            cout << "1. Chicken Wings (6 pcs) - Rs. 250\n";
-            cout << "2. Chicken Nuggets (8 pcs) - Rs. 300\n";
-            cout << "3. Fries (Regular) - Rs. 150\n";
-            cout << "4. Fries (Large) - Rs. 250\n";
-            cout << "5. Popcorn Chicken - Rs. 200\n";
+            deleteBook();
             break;
-
         case 3:
-            cout << "\nDrinks Menu:\n";
-            cout << "1. Soft Drink - Rs. 100\n";
-            cout << "2. Juice - Rs. 120\n";
-            cout << "3. Water Bottle - Rs. 80\n";
-            cout << "4. Cold Coffee - Rs. 180\n";
-            cout << "5. Milkshake - Rs. 250\n";
+            searchBook();
             break;
-
         case 4:
-            cout << "\nCombos Menu:\n";
-            cout << "1. Zinger Combo - Rs. 600\n";
-            cout << "2. Crispy Combo - Rs. 750\n";
-            cout << "3. Family Combo - Rs. 1500\n";
-            cout << "4. Snack Combo - Rs. 500\n";
-            cout << "5. Kid's Combo - Rs. 450\n";
+            viewBooks();
             break;
-
+        case 5:
+            borrowBook();
+            break;
+        case 6:
+            returnBook();
+            break;
+        case 7:
+            checkAvailability();
+            break;
+        case 8:
+            getBookCount();
+            break;
+        case 9:
+            getBorrowedCount();
+            break;
+        case 10:
+            getAvailableBooksCount();
+            break;
+        case 11:
+            clearLibrary();
+            break;
+        case 12:
+            viewBooksByAuthor();
+            break;
+        case 13:
+            updateBookDetails();
+            break;
+        case 14:
+            viewBorrowedBooks();
+            break;
+        case 15:
+            cout << "Exiting program.\n";
+            break;
         default:
-            cout << "Invalid choice. Please select a valid category.\n";
-            continue;
+            cout << "Wrong input, please select a valid option.\n";
         }
-
-        // Asking user to select an item from the chosen category
-        cout << "\nEnter the item number from the menu: ";
-        cin >> choice;
-
-        if (cin.fail()) 
-        {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter a valid item number.\n";
-            continue;
-        }
-
-        cout << "Enter quantity: ";
-        cin >> quantity;
-
-        if (cin.fail() || quantity <= 0) 
-        {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter a valid quantity.\n";
-            continue;
-        }
-
-        // Variable to store item price and name
-        string itemName;
-        float itemPrice = 0;
-
-        // Determine the price and name based on choice
-        if (categoryChoice == 1) 
-        {
-            if (choice == 1)
-            { 
-                itemName = "Zinger Burger"; itemPrice = 350; 
-            }
-            else if(choice == 2)
-            {
-                itemName = "Double Zinger"; itemPrice = 500; 
-            }
-            else if (choice == 3) 
-            { 
-                itemName = "Crispy Burger"; itemPrice = 400;
-            }
-            else if (choice == 4) 
-            {
-                itemName = "Grilled Chicken Burger"; itemPrice = 450;
-            }
-            else if (choice == 5) 
-            {
-                itemName = "Cheese Burger"; itemPrice = 380;
-            }
-            else 
-            {
-                cout << "Invalid burger choice.\n"; 
-                continue; 
-            }
-        }
-        else if (categoryChoice == 2)
-        {
-            if (choice == 1) 
-            { 
-                itemName = "Chicken Wings (6 pcs)"; itemPrice = 250;
-            }
-            else if (choice == 2)
-            {
-                itemName = "Chicken Nuggets (8 pcs)"; itemPrice = 300;
-            }
-            else if (choice == 3)
-            {
-                itemName = "Fries (Regular)"; itemPrice = 150;
-            }
-            else if (choice == 4)
-            { 
-                itemName = "Fries (Large)"; itemPrice = 250;
-            }
-            else if (choice == 5)
-            {
-                itemName = "Popcorn Chicken"; itemPrice = 200;
-            }
-            else
-            {
-                cout << "Invalid snack choice.\n";
-                continue; 
-            }
-        }
-
-        else if (categoryChoice == 3)
-        {
-            if (choice == 1) 
-            { 
-                itemName = "Soft Drink"; itemPrice = 100;
-            }
-            else if (choice == 2)
-            { 
-                itemName = "Juice"; itemPrice = 120; 
-            }
-            else if (choice == 3) 
-            {
-                itemName = "Water Bottle"; itemPrice = 80;
-            }
-            else if
-                (choice == 4) 
-            {
-                itemName = "Cold Coffee"; itemPrice = 180;
-            }
-            else if (choice == 5) 
-            { 
-                itemName = "Milkshake"; itemPrice = 250;
-            }
-            else
-            {
-                cout << "Invalid drink choice.\n"; 
-                continue;
-            }
-        }
-
-        else if (categoryChoice == 4)
-        {
-            if (choice == 1)
-            {
-                itemName = "Zinger Combo"; itemPrice = 600;
-            }
-            else if (choice == 2)
-            {
-                itemName = "Crispy Combo"; itemPrice = 750;
-            }
-            else if (choice == 3)
-            {
-                itemName = "Family Combo"; itemPrice = 1500;
-            }
-            else if (choice == 4) 
-            {
-                itemName = "Snack Combo"; itemPrice = 500;
-            }
-            else if (choice == 5)
-            {
-                itemName = "Kid's Combo"; itemPrice = 450;
-            }
-            else 
-            { 
-                cout << "Invalid combo choice.\n"; 
-                continue; 
-            }
-        }
-
-        // Calculate total for current item and add to grand total
-        float orderTotal = itemPrice * quantity;
-        total += orderTotal;
-
-        // Store order details in the summary string
-        orderSummary += to_string(quantity) + " x " + itemName + " Rs. "
-            + to_string(static_cast<int>(itemPrice)) + " each = Rs. "
-            + to_string(static_cast<int>(orderTotal)) + "\n";
-    }
-
-    // Ask for delivery option
-    cout << "\nWould you like delivery (Rs. 50 extra)? (y/n): ";
-    cin >> deliveryOption;
-
-    if (deliveryOption == 'y' || deliveryOption == 'Y') 
-    {
-        total += deliveryFee;
-        orderSummary += "Delivery Fee = Rs. 50\n";
-    }
-
-    // Print the final total bill with order details
-    cout << "\n**********************************\n";
-    cout << "Order Summary:\n" << orderSummary;
-    cout << "Total Bill: Rs. " << total << "\n";
-    cout << "*** Thank you for dining at KFC ***\n";
-
-    return 0;
+    } while (choice != 15);
 }
