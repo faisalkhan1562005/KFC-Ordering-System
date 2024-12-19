@@ -1,1 +1,1 @@
-# KFC-Ordering-System
+Library Management system 
